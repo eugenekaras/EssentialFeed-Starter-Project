@@ -17,6 +17,8 @@ class HTTPClient {
     static var shared = HTTPClient()
     
     func get (from url: URL) {}
+    
+    
 }
 
 class HTTPClientSpy: HTTPClient {
