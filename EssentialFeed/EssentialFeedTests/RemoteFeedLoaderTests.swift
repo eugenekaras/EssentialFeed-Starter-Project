@@ -50,7 +50,8 @@ class RemoteFeedLoaderTests: XCTestCase {
         
         samples.enumerated().forEach { index, code in
             expect(sut, toComplereWith: .failure(.invalidData), when: {
-                client.complete(withStatusCode: code, at: index)
+                let json = makeItemsJSON([])
+                client.complete(withStatusCode: code, data: json, at: index)
             })
         }
     }
@@ -91,7 +92,7 @@ class RemoteFeedLoaderTests: XCTestCase {
         let items = [item1.model, item2.model]
         
         expect(sut, toComplereWith: .success(items), when: {
-            let json = makeItemsJSON(items: [item1.json, item2.json])
+            let json = makeItemsJSON([item1.json, item2.json])
             client.complete(withStatusCode: 200, data: json)
         })
     }
@@ -112,7 +113,7 @@ class RemoteFeedLoaderTests: XCTestCase {
             "id": id.uuidString,
             "description": desctiption,
             "location": location,
-            "image_url": imageURL.absoluteString  
+            "image_url": imageURL.absoluteString
         ].reduce(into: [String: Any]()) { (acc, e) in
             if let value = e.value { acc[e.key] = value }
         }
@@ -120,7 +121,7 @@ class RemoteFeedLoaderTests: XCTestCase {
         return (item, json)
     }
     
-    private func makeItemsJSON(items: [[String: Any]]) -> Data {
+    private func makeItemsJSON(_ items: [[String: Any]]) -> Data {
         let json = ["items": items]
         
         return try! JSONSerialization.data(withJSONObject: json)
@@ -152,12 +153,13 @@ class RemoteFeedLoaderTests: XCTestCase {
             messages[index].completion(.failure(error))
         }
         
-        func complete(withStatusCode code: Int, data: Data = Data(), at index: Int = 0) {
+        func complete(withStatusCode code: Int, data: Data, at index: Int = 0) {
             let response = HTTPURLResponse(
                 url: requestedURLs[index],
                 statusCode: code,
                 httpVersion: nil,
-                headerFields: nil)!
+                headerFields: nil
+            )!
             
             messages[index].completion(.success(data,response))
         }
