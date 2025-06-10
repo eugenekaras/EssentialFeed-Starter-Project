@@ -7,15 +7,6 @@
 
 import Foundation
 
-public enum HTTPClientResult {
-    case success(Data, HTTPURLResponse)
-    case failure(Error)
-}
-
-public protocol HTTPClient {
-    func get (from url: URL, completion: @escaping (HTTPClientResult) -> Void)
-}
-
 public final class RemoteFeedLoader {
     private let url: URL
     private let client: HTTPClient
@@ -39,98 +30,14 @@ public final class RemoteFeedLoader {
         client.get(from: url) { result in
             switch result {
             case .success(let data, let response):
-                do {
-                    let items = try FeedItemsMapper.map(data, response)
-                    completion(.success(items))
-                } catch {
-                    completion(.failure(.invalidData))
-                }
+                completion(FeedItemsMapper.map(data, from: response))
             case .failure:
                 completion(.failure(.connectivity))
             }
         }
     }
+    
+
 }
 
-private class FeedItemsMapper {
-    
-    private struct Root: Decodable {
-        let items: [Item]
-    }
-     
-
-    private struct Item: Decodable {
-        let id: UUID
-        let description: String?
-        let location: String?
-        let image: URL
-        
-        var item: FeedItem {
-            return FeedItem(id: id, description: description, location: location, imageURL: image)
-        }
-    }
-    
-    static var OK_200: Int { 200 }
-    
-}
-
-private class FeedItemsMapper {
-    
-    private struct Root: Decodable {
-        let items: [Item]
-    }
-     
-
-    private struct Item: Decodable {
-        let id: UUID
-        let description: String?
-        let location: String?
-        let image: URL
-        
-        var item: FeedItem {
-            return FeedItem(id: id, description: description, location: location, imageURL: image)
-        }
-    }
-}
-
-private class FeedItemsMapper {
-    
-    private struct Root: Decodable {
-        let items: [Item]
-    }
-     
-
-    private struct Item: Decodable {
-        let id: UUID
-        let description: String?
-        let location: String?
-        let image: URL
-        
-        var item: FeedItem {
-            return FeedItem(id: id, description: description, location: location, imageURL: image)
-        }
-    }
-    
-    static func map(_ data: Data, _ responce: HTTPURLResponse) throws -> [FeedItem]{
-        guard responce.statusCode == 200 else {
-            throw RemoteFeedLoader.Error.invalidData
-        }
-        
-        let root = try JSONDecoder().decode(Root.self, from: data)
-        
-        return root.items.map{ $0.item }
-    static func map(_ data: Data, _ responce: HTTPURLResponse) throws -> [FeedItem]{
-        guard responce.statusCode == 200 else {
-            throw RemoteFeedLoader.Error.invalidData
-        }
-        
-        let root = try JSONDecoder().decode(Root.self, from: data)
-        
-        return root.items.map{ $0.item }
-        
-        let root = try JSONDecoder().decode(Root.self, from: data)
-        
-        return root.items.map{ $0.item }
-    }
-}
 
