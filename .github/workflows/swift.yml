@@ -16,9 +16,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    
-    - name: Select Xcode version
-      run: sudo xcode-select -switch /Applications/Xcode_15.2.app
         
     - name: Build and Test
       run: 
