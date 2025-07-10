@@ -11,17 +11,16 @@ on:
 
 jobs:
   build-and-test:
-
     runs-on: macos-latest
 
     steps:
-    - uses: actions/checkout@v4
-        
-    - name: Build and Test
-      run: |
-      xcodebuild \
-      -project EssentialFeed.xcodeproj \
-      -scheme CI \
-      -sdk iphonesimulator \
-      -destination 'platform=iOS Simulator,name=iPhone 15,OS=17.2' \
-      clean build test
+      - uses: actions/checkout@v4
+
+      - name: Build and Test
+        run: |
+          xcodebuild \
+            -project EssentialFeed.xcodeproj \
+            -scheme CI \
+            -sdk iphonesimulator \
+            -destination 'platform=iOS Simulator,name=iPhone 15,OS=17.2' \
+            clean build test
