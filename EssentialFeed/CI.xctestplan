@@ -1,8 +1,15 @@
 {
   "configurations" : [
     {
-      "id" : "2D38CC65-4806-4B32-92D0-65611D0E197D",
+      "id" : "410D645E-E092-449C-AB8D-05655E859C3C",
       "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    },
+    {
+      "id" : "650CDD59-B534-467D-82B6-E94AE6920712",
+      "name" : "Configuration 2",
       "options" : {
 
       }
