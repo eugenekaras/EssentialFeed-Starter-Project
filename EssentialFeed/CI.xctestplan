@@ -16,8 +16,7 @@
     }
   ],
   "defaultOptions" : {
-    "codeCoverage" : false,
-    "threadSanitizerEnabled" : true
+    "codeCoverage" : false
   },
   "testTargets" : [
     {
